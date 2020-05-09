@@ -30,9 +30,12 @@ namespace WebApi.Areas.Api
 
         // GET: api/Patients/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Patient>> GetPatient(int id)
+        public ActionResult<Patient> GetPatient(int id)
         {
-            var patient = await _context.Patients.FindAsync(id);
+            var patient = _context.Patients
+                .Include(p => p.Journals)
+                .Where(p => p.Id == id)
+                .FirstOrDefault();
 
             if (patient == null)
             {
@@ -87,7 +90,7 @@ namespace WebApi.Areas.Api
         }
 
         [HttpPost("{id}/journal")]
-        public async Task<ActionResult<Journal>> PostPatientJornal(int id, Journal journal)
+        public async Task<ActionResult<Patient>> PostPatientJornal(int id, Journal journal)
         {
             var patient = await _context.Patients.FindAsync(id);
             if (patient == null)
@@ -96,33 +99,15 @@ namespace WebApi.Areas.Api
             }
 
             var addJournal = new Journal();
-            
-            addJournal.Patient = patient;
+
             addJournal.EntryBy = journal.EntryBy;
             addJournal.Date = journal.Date;
             addJournal.Comment = journal.Comment;
-            
 
-            _context.Journals.Add(addJournal);
+            patient.Journals.Add(journal);
             await _context.SaveChangesAsync();
-
-            var result = _context.Journals
-                .Where(j => j.Id == addJournal.Id)
-                .Select(j => new Journal() 
-                {
-                    Id = j.Id,
-                    EntryBy = j.EntryBy,
-                    Date = j.Date,
-                    Comment = j.Comment
-                    
-                });      //FirstOrDefault(x => x.Id == Id);
-
-
-
-
-            //return Created($"journal/{result}", result);
-            return Created($"journals/{addJournal.Id}", result);
-            //return CreatedAtAction(nameof(GetPatient), patient.Id, addJournal);
+                        
+            return Ok(journal); 
         }
 
         // DELETE: api/Patients/5
