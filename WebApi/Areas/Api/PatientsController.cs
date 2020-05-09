@@ -107,7 +107,7 @@ namespace WebApi.Areas.Api
             patient.Journals.Add(journal);
             await _context.SaveChangesAsync();
                         
-            return Ok(journal); 
+            return Created($"journals/{journal.Id}", journal);
         }
 
         // DELETE: api/Patients/5
