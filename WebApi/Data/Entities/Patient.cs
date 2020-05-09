@@ -7,6 +7,17 @@ namespace WebAPI.Data.Entities
 {
     public class Patient
     {
+        public Patient()
+        {
+
+        }
+        public Patient(string firstName, string lastName, string socialSecurityNumber)
+        {
+            FirstName = firstName;
+            LastName = lastName;
+            SocialSecurityNumber = socialSecurityNumber;
+        }
+
         public Patient(int id, string firstName, string lastName, string socialSecurityNumber)
         {
             Id = id;

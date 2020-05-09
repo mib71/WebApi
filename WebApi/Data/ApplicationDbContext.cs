@@ -28,6 +28,16 @@ namespace WebApi.Data
 
             List<IdentityRole> roles = SeedRoles(modelBuilder);
             SeedUsers(modelBuilder, roles);
+
+            var patients = new List<Patient>
+            {
+                new Patient(1 , "First1", "Last1", "111-11111"),
+                new Patient(2 , "First2", "Last2", "222-22222"),
+                new Patient(3 , "First3", "Last3", "333-33333"),
+                new Patient(4 , "First4", "Last4", "444-44444"),
+            };
+
+            patients.ForEach(p => modelBuilder.Entity<Patient>().HasData(p));
         }
 
         private static List<IdentityRole> SeedRoles(ModelBuilder modelBuilder)

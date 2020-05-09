@@ -7,9 +7,16 @@ namespace WebAPI.Data.Entities
 {
     public class Journal
     {
+        public Journal()
+        {
+
+        }
+
+        
+
         public int Id { get; set; }
         public string EntryBy { get; set; }
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; } //= DateTime.Now;
         public string Comment { get; set; }
 
         public Patient Patient { get; set; }
