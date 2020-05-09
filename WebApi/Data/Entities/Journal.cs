@@ -11,5 +11,7 @@ namespace WebAPI.Data.Entities
         public string EntryBy { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public string Comment { get; set; }
+
+        public Patient Patient { get; set; }
     }
 }
