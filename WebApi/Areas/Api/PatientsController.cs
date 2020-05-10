@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data.Entities;
 using WebApi.Data;
+using System.Text.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace WebApi.Areas.Api
 {
@@ -49,31 +52,20 @@ namespace WebApi.Areas.Api
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPatient(int id, Patient patient)
+        public async Task<IActionResult> PutPatient(int id, Patient updatePatient)
         {
-            if (id != patient.Id)
-            {
-                return BadRequest();
-            }
+            var patient = _context.Patients
+                .FirstOrDefault(p => p.Id == id);
 
-            _context.Entry(patient).State = EntityState.Modified;
+            if (patient == null) return NotFound();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PatientExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
 
+            patient.FirstName = updatePatient.FirstName;
+            patient.LastName = updatePatient.LastName;
+            patient.SocialSecurityNumber = updatePatient.SocialSecurityNumber;
+
+            await _context.SaveChangesAsync();
+            
             return NoContent();
         }
 
@@ -98,16 +90,19 @@ namespace WebApi.Areas.Api
                 return NotFound();
             }
 
+            //var json = "{\"MyDateTime\": \"0001-01-01T00:00:00\"}";
+            //var c = System.Text.Json.JsonSerializer.Deserialize<Journal.Date>(json);
+
             var addJournal = new Journal();
 
             addJournal.EntryBy = journal.EntryBy;
             addJournal.Date = journal.Date;
             addJournal.Comment = journal.Comment;
 
-            patient.Journals.Add(journal);
+            patient.Journals.Add(addJournal);
             await _context.SaveChangesAsync();
-                        
-            return Created($"journals/{journal.Id}", journal);
+            
+            return Created($"https://localhost:5001/api/journals/{addJournal.Id}", addJournal);
         }
 
         // DELETE: api/Patients/5
