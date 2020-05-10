@@ -107,23 +107,23 @@ namespace WebApi.Areas.Api
 
         // DELETE: api/Patients/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Patient>> DeletePatient(int id)
+        public ActionResult<Patient> DeletePatient(int id)
         {
-            var patient = await _context.Patients.FindAsync(id);
+            var patient = _context.Patients
+                .FirstOrDefault(p => p.Id == id);
+
             if (patient == null)
             {
                 return NotFound();
             }
 
+            //var journalGroup = patient.Journals.ToList();
+
+            //_context.Remove(journalGroup);
             _context.Patients.Remove(patient);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
-            return patient;
-        }
-
-        private bool PatientExists(int id)
-        {
-            return _context.Patients.Any(e => e.Id == id);
+            return Ok(patient);
         }
     }
 }

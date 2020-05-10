@@ -25,7 +25,7 @@ namespace WebApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            
             List<IdentityRole> roles = SeedRoles(modelBuilder);
             SeedUsers(modelBuilder, roles);
 
@@ -38,6 +38,12 @@ namespace WebApi.Data
             };
 
             patients.ForEach(p => modelBuilder.Entity<Patient>().HasData(p));
+
+            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
+                .SelectMany(e => e.GetForeignKeys()))
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Cascade;
+            }
         }
 
         private static List<IdentityRole> SeedRoles(ModelBuilder modelBuilder)
