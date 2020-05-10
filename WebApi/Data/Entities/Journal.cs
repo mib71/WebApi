@@ -16,9 +16,8 @@ namespace WebAPI.Data.Entities
 
         public int Id { get; set; }
         public string EntryBy { get; set; }
-        public DateTime Date { get; set; } //= DateTime.Now;
+        public string Date { get; set; } // Ej DateTime eftersom användaren skickar ett ogiltigt tidsformat
         public string Comment { get; set; }
-        //public Patient Patient { get; set; }
-        
+                
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using WebAPI.Data.Entities;
 
 namespace WebApi.Data
@@ -38,12 +40,12 @@ namespace WebApi.Data
             };
 
             patients.ForEach(p => modelBuilder.Entity<Patient>().HasData(p));
-
-            foreach (var foreignKey in modelBuilder.Model.GetEntityTypes()
-                .SelectMany(e => e.GetForeignKeys()))
-            {
-                foreignKey.DeleteBehavior = DeleteBehavior.Cascade;
-            }
+                       
+            modelBuilder.Entity<Patient>()
+                .HasMany(x => x.Journals)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+                       
         }
 
         private static List<IdentityRole> SeedRoles(ModelBuilder modelBuilder)

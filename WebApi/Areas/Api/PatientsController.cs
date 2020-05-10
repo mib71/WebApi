@@ -10,6 +10,7 @@ using WebApi.Data;
 using System.Text.Json;
 using System.Net.Http;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace WebApi.Areas.Api
 {
@@ -81,6 +82,7 @@ namespace WebApi.Areas.Api
             return CreatedAtAction("GetPatient", new { id = patient.Id }, patient);
         }
 
+        // POST: api/Patients/5/journal
         [HttpPost("{id}/journal")]
         public async Task<ActionResult<Patient>> PostPatientJornal(int id, Journal journal)
         {
@@ -90,18 +92,15 @@ namespace WebApi.Areas.Api
                 return NotFound();
             }
 
-            //var json = "{\"MyDateTime\": \"0001-01-01T00:00:00\"}";
-            //var c = System.Text.Json.JsonSerializer.Deserialize<Journal.Date>(json);
-
             var addJournal = new Journal();
-
+                                    
             addJournal.EntryBy = journal.EntryBy;
             addJournal.Date = journal.Date;
             addJournal.Comment = journal.Comment;
 
             patient.Journals.Add(addJournal);
             await _context.SaveChangesAsync();
-            
+                        
             return Created($"https://localhost:5001/api/journals/{addJournal.Id}", addJournal);
         }
 
@@ -109,17 +108,13 @@ namespace WebApi.Areas.Api
         [HttpDelete("{id}")]
         public ActionResult<Patient> DeletePatient(int id)
         {
-            var patient = _context.Patients
-                .FirstOrDefault(p => p.Id == id);
-
+            var patient = _context.Patients.Include(j => j.Journals).FirstOrDefault(p => p.Id == id);
+            
             if (patient == null)
             {
                 return NotFound();
             }
-
-            //var journalGroup = patient.Journals.ToList();
-
-            //_context.Remove(journalGroup);
+                        
             _context.Patients.Remove(patient);
             _context.SaveChanges();
 
