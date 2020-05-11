@@ -27,10 +27,7 @@ namespace WebApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            
-            List<IdentityRole> roles = SeedRoles(modelBuilder);
-            SeedUsers(modelBuilder, roles);
-
+                        
             var patients = new List<Patient>
             {
                 new Patient(1 , "First1", "Last1", "111-11111"),
@@ -45,7 +42,9 @@ namespace WebApi.Data
                 .HasMany(x => x.Journals)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Cascade);
-                       
+
+            List<IdentityRole> roles = SeedRoles(modelBuilder);
+            SeedUsers(modelBuilder, roles);
         }
 
         private static List<IdentityRole> SeedRoles(ModelBuilder modelBuilder)
@@ -54,7 +53,7 @@ namespace WebApi.Data
             {
                 new IdentityRole
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = "93ac71e5-9c66-42ad-a5d2-64676da0812c",     // Guid.NewGuid().ToString(),
                     Name = "Administrator",
                     NormalizedName = "ADMINISTRATOR"
                 }
@@ -72,8 +71,8 @@ namespace WebApi.Data
             var johnDoe = new IdentityUser()
             {
                 Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
-                UserName = "johndoe",
-                NormalizedUserName = "JOHNDOE",
+                UserName = "john.doe@nomail.com", //"johndoe",
+                NormalizedUserName = "JOHN.DOE@NOMAIL.COM", //"JOHNDOE",
                 Email = "john.doe@nomail.com",
                 NormalizedEmail = "JOHN.DOE@NOMAIL.COM",
                 EmailConfirmed = true,
