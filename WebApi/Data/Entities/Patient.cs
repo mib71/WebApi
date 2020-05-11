@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,8 +28,11 @@ namespace WebAPI.Data.Entities
         }
 
         public int Id { get; set; }
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
+        [Required]
         public string SocialSecurityNumber { get; set; }
         public List<Journal> Journals { get; set; } = new List<Journal>();
     }
