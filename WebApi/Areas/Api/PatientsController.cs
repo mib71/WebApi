@@ -76,10 +76,18 @@ namespace WebApi.Areas.Api
         [HttpPost]
         public async Task<ActionResult<Patient>> PostPatient(Patient patient)
         {
+            var newPatient = patient;
+
+            if (newPatient == null)
+            {
+                return BadRequest();
+            }
+            
+            
             _context.Patients.Add(patient);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPatient", new { id = patient.Id }, patient);
+            return CreatedAtAction("GetPatient", new { id = newPatient.Id }, newPatient);
         }
 
         // POST: api/Patients/5/journal
