@@ -16,6 +16,8 @@ using Microsoft.Extensions.Hosting;
 using WebApi.Areas.Identity;
 using WebApi.Data;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WebApi
 {
@@ -48,6 +50,8 @@ namespace WebApi
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
 
+            // Install-Package System.IdentityModel.Tokens.Jwt,
+            // Install-Package Microsoft.AspNetCore.Authentication.JwtBearer 
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddAuthorization(options =>
@@ -55,6 +59,19 @@ namespace WebApi
                 options.AddPolicy("IsAdministrator", policy => policy.RequireRole("Administrator"));
             });
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(Config =>
+            {
+                var signingKey = Convert.FromBase64String(Configuration["Token:SigningKey"]);
+
+                Config.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(signingKey)
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
