@@ -35,7 +35,9 @@ namespace WebApi
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddHttpClient("webApi", client =>
@@ -46,10 +48,12 @@ namespace WebApi
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
 
-            //services.AddControllers().AddNewtonsoftJson();
-
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsAdministrator", policy => policy.RequireRole("Administrator"));
+            });
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
         }
 
