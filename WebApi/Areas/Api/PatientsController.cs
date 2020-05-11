@@ -11,9 +11,11 @@ using System.Text.Json;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Areas.Api
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PatientsController : ControllerBase

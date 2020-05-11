@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data.Entities;
 using WebApi.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApi.Areas.Api
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class JournalsController : ControllerBase
