@@ -71,8 +71,8 @@ namespace WebApi.Data
             var johnDoe = new IdentityUser()
             {
                 Id = "a18be9c0-aa65-4af8-bd17-00bd9344e575",
-                UserName = "john.doe@nomail.com", //"johndoe",
-                NormalizedUserName = "JOHN.DOE@NOMAIL.COM", //"JOHNDOE",
+                UserName = "johndoe", //"johndoe",
+                NormalizedUserName = "JOHNDOE", //"JOHNDOE",
                 Email = "john.doe@nomail.com",
                 NormalizedEmail = "JOHN.DOE@NOMAIL.COM",
                 EmailConfirmed = true,
