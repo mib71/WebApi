@@ -52,8 +52,6 @@ namespace WebApi.Areas.Api
         }
 
         // PUT: api/Patients/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPatient(int id, Patient updatePatient)
         {
@@ -73,8 +71,6 @@ namespace WebApi.Areas.Api
         }
 
         // POST: api/Patients
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<Patient>> PostPatient(Patient patient)
         {
@@ -110,7 +106,7 @@ namespace WebApi.Areas.Api
 
             patient.Journals.Add(addJournal);
             await _context.SaveChangesAsync();
-                        
+
             return Created($"https://localhost:5001/api/journals/{addJournal.Id}", addJournal);
         }
 

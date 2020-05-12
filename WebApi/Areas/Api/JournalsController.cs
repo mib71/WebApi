@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Data.Entities;
@@ -45,8 +44,6 @@ namespace WebApi.Areas.Api
         }
 
         // PUT: api/Journals/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutJournal(int id, Journal journal)
         {
@@ -75,19 +72,7 @@ namespace WebApi.Areas.Api
 
             return NoContent();
         }
-
-        // POST: api/Journals
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Journal>> PostJournal(Journal journal)
-        {
-            _context.Journals.Add(journal);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetJournal", new { id = journal.Id }, journal);
-        }
-
+        
         // DELETE: api/Journals/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Journal>> DeleteJournal(int id)
