@@ -19,7 +19,7 @@ namespace WebAPI.Data.Entities
         [Required]
         public string EntryBy { get; set; }
         [Required]
-        public string Date { get; set; } // Ej DateTime eftersom användaren skickar ett ogiltigt tidsformat
+        public DateTime Date { get; set; } 
         [Required]
         public string Comment { get; set; }
                 
