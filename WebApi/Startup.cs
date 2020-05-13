@@ -18,6 +18,7 @@ using WebApi.Data;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 namespace WebApi
 {
@@ -37,7 +38,7 @@ namespace WebApi
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            
+
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -50,16 +51,17 @@ namespace WebApi
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             });
 
-            // Install-Package System.IdentityModel.Tokens.Jwt,
-            // Install-Package Microsoft.AspNetCore.Authentication.JwtBearer 
             services.AddRazorPages();
             services.AddServerSideBlazor();
+
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("IsAdministrator", policy => policy.RequireRole("Administrator"));
             });
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 
+            // Install-Package System.IdentityModel.Tokens.Jwt,
+            // Install-Package Microsoft.AspNetCore.Authentication.JwtBearer
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(Config =>
             {
                 var signingKey = Convert.FromBase64String(Configuration["Token:SigningKey"]);
@@ -72,8 +74,19 @@ namespace WebApi
                     IssuerSigningKey = new SymmetricSecurityKey(signingKey)
                 };
             });
-        }
 
+            // Install-Package Swashbuckle.AspNetCore
+            services.AddSwaggerGen(setupAction =>
+            {
+                setupAction.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "WebAPI",
+                    Version = "1"
+                });
+            });
+        }
+    
+        
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -88,6 +101,15 @@ namespace WebApi
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            // Add middleware to generate OpenAPI Swagger as a JSON endpoint (swagger.json)
+            app.UseSwagger();
+
+            // specify the Swagger JSON endpoint
+            app.UseSwaggerUI(setupAction =>
+            {
+                setupAction.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1");
+            });
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
