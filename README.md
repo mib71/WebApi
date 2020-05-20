@@ -1,5 +1,5 @@
 # WebApi
-My exam in WebAPI at EC Education Helsingborg 2020-05-15
+Exam in WebAPI at EC Education Helsingborg 2020-05-15
 
 ### Prerequisites
 Add Migration and Update-Database in Packet Manager Console
